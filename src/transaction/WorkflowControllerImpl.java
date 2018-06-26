@@ -1,0 +1,375 @@
+package transaction;
+
+import java.io.FileInputStream;
+import java.rmi.Naming;
+import java.rmi.RMISecurityManager;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.util.Properties;
+
+/** 
+ * Workflow Controller for the Distributed Travel Reservation System.
+ * 
+ * Description: toy implementation of the WC.  In the real
+ * implementation, the WC should forward calls to either RM or TM,
+ * instead of doing the things itself.
+ */
+
+public class WorkflowControllerImpl
+    extends java.rmi.server.UnicastRemoteObject
+    implements WorkflowController {
+
+    protected int flightcounter, flightprice, carscounter, carsprice, roomscounter, roomsprice; 
+    protected int xidCounter;
+    
+    protected ResourceManager rmFlights = null;
+    protected ResourceManager rmRooms = null;
+    protected ResourceManager rmCars = null;
+    protected ResourceManager rmCustomers = null;
+    protected TransactionManager tm = null;
+
+    public static void main(String args[]) {
+	System.setSecurityManager(new RMISecurityManager());
+	Properties prop = new Properties();
+	try {
+		prop.load(new FileInputStream("conf/ddb.conf"));
+	} catch (Exception e1) {
+		e1.printStackTrace();
+		return;
+	}
+	String rmiPort = prop.getProperty("wc.port");
+	
+	try {
+		LocateRegistry.createRegistry(Integer.parseInt(rmiPort));
+		if (rmiPort == null) {
+		    rmiPort = "";
+		} else if (!rmiPort.equals("")) {
+		    rmiPort = "//:" + rmiPort + "/";
+		}
+	    WorkflowControllerImpl obj = new WorkflowControllerImpl();
+	    Naming.rebind(rmiPort + WorkflowController.RMIName, obj);
+	    System.out.println("WC bound");
+	}
+	catch (Exception e) {
+	    System.err.println("WC not bound:" + e);
+	    System.exit(1);
+	}
+    }
+    
+    
+    public WorkflowControllerImpl() throws RemoteException {
+	flightcounter = 0;
+	flightprice = 0;
+	carscounter = 0;
+	carsprice = 0;
+	roomscounter = 0;
+	roomsprice = 0;
+	flightprice = 0;
+
+	xidCounter = 1;
+
+	while (!reconnect()) {
+	    // would be better to sleep a while
+	} 
+    }
+
+
+    // TRANSACTION INTERFACE
+    public int start()
+	throws RemoteException {
+	return (xidCounter++);
+    }
+
+    public boolean commit(int xid)
+	throws RemoteException, 
+	       TransactionAbortedException, 
+	       InvalidTransactionException {
+	System.out.println("Committing");
+	return true;
+    }
+
+    public void abort(int xid)
+	throws RemoteException, 
+               InvalidTransactionException {
+	return;
+    }
+
+
+    // ADMINISTRATIVE INTERFACE
+    public boolean addFlight(int xid, String flightNum, int numSeats, int price) 
+	throws RemoteException, 
+	       TransactionAbortedException,
+	       InvalidTransactionException {
+	flightcounter += numSeats;
+	flightprice = price;
+	return true;
+    }
+
+    public boolean deleteFlight(int xid, String flightNum)
+	throws RemoteException, 
+	       TransactionAbortedException,
+	       InvalidTransactionException {
+	flightcounter = 0;
+	flightprice = 0;
+	return true;
+    }
+		
+    public boolean addRooms(int xid, String location, int numRooms, int price) 
+	throws RemoteException, 
+	       TransactionAbortedException,
+	       InvalidTransactionException {
+	roomscounter += numRooms;
+	roomsprice = price;
+	return true;
+    }
+
+    public boolean deleteRooms(int xid, String location, int numRooms) 
+	throws RemoteException, 
+	       TransactionAbortedException,
+	       InvalidTransactionException {
+	roomscounter = 0;
+	roomsprice = 0;
+	return true;
+    }
+
+    public boolean addCars(int xid, String location, int numCars, int price) 
+	throws RemoteException, 
+	       TransactionAbortedException,
+	       InvalidTransactionException {
+	carscounter += numCars;
+	carsprice = price;
+	return true;
+    }
+
+    public boolean deleteCars(int xid, String location, int numCars) 
+	throws RemoteException, 
+	       TransactionAbortedException,
+	       InvalidTransactionException {
+	carscounter = 0;
+	carsprice = 0;
+	return true;
+    }
+
+    public boolean newCustomer(int xid, String custName) 
+	throws RemoteException, 
+	       TransactionAbortedException,
+	       InvalidTransactionException {
+	return true;
+    }
+
+    public boolean deleteCustomer(int xid, String custName) 
+	throws RemoteException, 
+	       TransactionAbortedException,
+	       InvalidTransactionException {
+	return true;
+    }
+
+
+    // QUERY INTERFACE
+    public int queryFlight(int xid, String flightNum)
+	throws RemoteException, 
+	       TransactionAbortedException,
+	       InvalidTransactionException {
+	return flightcounter;
+    }
+
+    public int queryFlightPrice(int xid, String flightNum)
+	throws RemoteException, 
+	       TransactionAbortedException,
+	       InvalidTransactionException {
+	return flightprice;
+    }
+
+    public int queryRooms(int xid, String location)
+	throws RemoteException, 
+	       TransactionAbortedException,
+	       InvalidTransactionException {
+	return roomscounter;
+    }
+
+    public int queryRoomsPrice(int xid, String location)
+	throws RemoteException, 
+	       TransactionAbortedException,
+	       InvalidTransactionException {
+	return roomsprice;
+    }
+
+    public int queryCars(int xid, String location)
+	throws RemoteException, 
+	       TransactionAbortedException,
+	       InvalidTransactionException {
+	return carscounter;
+    }
+
+    public int queryCarsPrice(int xid, String location)
+	throws RemoteException, 
+	       TransactionAbortedException,
+	       InvalidTransactionException {
+	return carsprice;
+    }
+
+    public int queryCustomerBill(int xid, String custName)
+	throws RemoteException, 
+	       TransactionAbortedException,
+	       InvalidTransactionException {
+	return 0;
+    }
+
+
+    // RESERVATION INTERFACE
+    public boolean reserveFlight(int xid, String custName, String flightNum) 
+	throws RemoteException, 
+	       TransactionAbortedException,
+	       InvalidTransactionException {
+	flightcounter--;
+	return true;
+    }
+ 
+    public boolean reserveCar(int xid, String custName, String location) 
+	throws RemoteException, 
+	       TransactionAbortedException,
+	       InvalidTransactionException {
+	carscounter--;
+	return true;
+    }
+
+    public boolean reserveRoom(int xid, String custName, String location) 
+	throws RemoteException, 
+	       TransactionAbortedException,
+	       InvalidTransactionException {
+	roomscounter--;
+	return true;
+    }
+
+    // TECHNICAL/TESTING INTERFACE
+    public boolean reconnect()
+	throws RemoteException {
+    	Properties prop = new Properties();
+    	try {
+    		prop.load(new FileInputStream("conf/ddb.conf"));
+    	} catch (Exception e1) {
+    		e1.printStackTrace();
+    		return false;
+    	}
+    	String rmiPort[] = new String[5];
+    	rmiPort[0] = prop.getProperty("rm.RMFlights.port");
+    	rmiPort[1] = prop.getProperty("rm.RMRooms.port");
+    	rmiPort[2] = prop.getProperty("rm.RMCars.port");
+    	rmiPort[3] = prop.getProperty("rm.RMCustomers.port");
+    	rmiPort[4] = prop.getProperty("tm.port");
+    	for (int i=0; i<5; i++) {
+    		if (rmiPort[i] == null) {
+    		    rmiPort[i] = "";
+    		} else if (!rmiPort[i].equals("")) {
+    		    rmiPort[i] = "//:" + rmiPort[i] + "/";
+    		}
+
+    	}
+	
+	try {
+	    rmFlights =
+		(ResourceManager)Naming.lookup(rmiPort[0] +
+					       ResourceManager.RMINameFlights);
+	    System.out.println("WC bound to RMFlights");
+	    rmRooms =
+		(ResourceManager)Naming.lookup(rmiPort[1] +
+					       ResourceManager.RMINameRooms);
+	    System.out.println("WC bound to RMRooms");
+	    rmCars =
+		(ResourceManager)Naming.lookup(rmiPort[2] +
+					       ResourceManager.RMINameCars);
+	    System.out.println("WC bound to RMCars");
+	    rmCustomers =
+		(ResourceManager)Naming.lookup(rmiPort[3] +
+					       ResourceManager.RMINameCustomers);
+	    System.out.println("WC bound to RMCustomers");
+	    tm =
+		(TransactionManager)Naming.lookup(rmiPort[4] +
+						  TransactionManager.RMIName);
+	    System.out.println("WC bound to TM");
+	} 
+	catch (Exception e) {
+	    System.err.println("WC cannot bind to some component:" + e);
+	    return false;
+	}
+
+	try {
+	    if (rmFlights.reconnect() && rmRooms.reconnect() &&
+		rmCars.reconnect() && rmCustomers.reconnect()) {
+		return true;
+	    }
+	} catch (Exception e) {
+	    System.err.println("Some RM cannot reconnect:" + e);
+	    return false;
+	}
+
+	return false;
+    }
+
+    public boolean dieNow(String who)
+	throws RemoteException {
+	if (who.equals(TransactionManager.RMIName) ||
+	    who.equals("ALL")) {
+	    try {
+		tm.dieNow();
+	    } catch (RemoteException e) {}
+	}
+	if (who.equals(ResourceManager.RMINameFlights) ||
+	    who.equals("ALL")) {
+	    try {
+		rmFlights.dieNow();
+	    } catch (RemoteException e) {}
+	}
+	if (who.equals(ResourceManager.RMINameRooms) ||
+	    who.equals("ALL")) {
+	    try {
+		rmRooms.dieNow();
+	    } catch (RemoteException e) {}
+	}
+	if (who.equals(ResourceManager.RMINameCars) ||
+	    who.equals("ALL")) {
+	    try {
+		rmCars.dieNow();
+	    } catch (RemoteException e) {}
+	}
+	if (who.equals(ResourceManager.RMINameCustomers) ||
+	    who.equals("ALL")) {
+	    try {
+		rmCustomers.dieNow();
+	    } catch (RemoteException e) {}
+	}
+	if (who.equals(WorkflowController.RMIName) ||
+	    who.equals("ALL")) {
+	    System.exit(1);
+	}
+	return true;
+    }
+    public boolean dieRMAfterEnlist(String who)
+	throws RemoteException {
+	return true;
+    }
+    public boolean dieRMBeforePrepare(String who)
+	throws RemoteException {
+	return true;
+    }
+    public boolean dieRMAfterPrepare(String who)
+	throws RemoteException {
+	return true;
+    }
+    public boolean dieTMBeforeCommit()
+	throws RemoteException {
+	return true;
+    }
+    public boolean dieTMAfterCommit()
+	throws RemoteException {
+	return true;
+    }
+    public boolean dieRMBeforeCommit(String who)
+	throws RemoteException {
+	return true;
+    }
+    public boolean dieRMBeforeAbort(String who)
+	throws RemoteException {
+	return true;
+    }
+}
