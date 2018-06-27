@@ -3,7 +3,7 @@ package transaction;
 import java.io.Serializable;
 
 /**
- * @author junhuihan
+ * @author jett
  */
 public class Car implements ResourceItem, Serializable {
 
@@ -11,16 +11,16 @@ public class Car implements ResourceItem, Serializable {
 
     protected String location;
     protected int price;
-    protected int numCars;
-    protected int numAvail;
+    protected int carNum;
+    protected int availNum;
 
     protected boolean isdeleted = false;
 
-    public Car(String location, int price, int numCars, int numAvail) {
+    public Car(String location, int price, int carNum, int availNum) {
         this.location = location;
         this.price = price;
-        this.numCars = numCars;
-        this.numAvail = numAvail;
+        this.carNum = carNum;
+        this.availNum = availNum;
     }
 
     public String getLocation() {
@@ -39,30 +39,30 @@ public class Car implements ResourceItem, Serializable {
         this.price = price;
     }
 
-    public int getNumCars() {
-        return numCars;
+    public int getCarNum() {
+        return carNum;
     }
 
-    public void setNumCars(int numCars) {
-        this.numCars = numCars;
+    public void setCarNum(int carNum) {
+        this.carNum = carNum;
     }
 
-    public int getNumAvail() {
-        return numAvail;
+    public int getAvailNum() {
+        return availNum;
     }
 
-    public void setNumAvail(int numAvail) {
-        this.numAvail = numAvail;
+    public void setAvailNum(int numAvail) {
+        this.availNum = availNum;
     }
 
     public String[] getColumnNames() {
         // TODO Auto-generated method stub
-        return new String[]{"location", "price", "numCars", "numAvail"};
+        return new String[]{"location", "price", "carNum", "availNum"};
     }
 
     public String[] getColumnValues() {
         // TODO Auto-generated method stub
-        return new String[]{location, "" + price, "" + numCars, "" + numAvail};
+        return new String[]{location, "" + price, "" + carNum, "" + availNum};
     }
 
     public Object getIndex(String indexName) throws InvalidIndexException {
@@ -71,10 +71,10 @@ public class Car implements ResourceItem, Serializable {
             return location;
         } else if (indexName.equals("price")) {
             return price;
-        } else if (indexName.equals("numCars")) {
-            return numCars;
-        } else if (indexName.equals("numAvail")) {
-            return numAvail;
+        } else if (indexName.equals("carNum")) {
+            return carNum;
+        } else if (indexName.equals("availNum")) {
+            return availNum;
         } else {
             throw new InvalidIndexException(indexName);
         }
@@ -95,7 +95,7 @@ public class Car implements ResourceItem, Serializable {
     }
 
     public Object clone() {
-        Car c = new Car(getLocation(), getPrice(), getNumCars(), getNumAvail());
+        Car c = new Car(getLocation(), getPrice(), getCarNum(), getAvailNum());
         c.isdeleted = isdeleted;
         return c;
     }
