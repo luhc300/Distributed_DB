@@ -2,9 +2,7 @@ package transaction;
 
 import java.io.Serializable;
 
-/**
- * @author junhuihan
- */
+
 public class Car implements ResourceItem, Serializable {
 
     public static final String INDEX_LOCATION = "location";
