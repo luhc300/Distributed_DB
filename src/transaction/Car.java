@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * @author jett
+ *
  */
 public class Car implements ResourceItem, Serializable {
 
