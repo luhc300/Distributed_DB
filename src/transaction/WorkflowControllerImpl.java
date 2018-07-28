@@ -121,9 +121,7 @@ public class WorkflowControllerImpl
 
     //1 success,-1 commitException
     public int commit(int xid)
-            throws RemoteException,
-            TransactionAbortedException,
-            InvalidTransactionException {
+            throws RemoteException, TransactionAbortedException, InvalidTransactionException {
         System.out.println("Committing");
         int result=0;
         try{
@@ -765,33 +763,93 @@ public class WorkflowControllerImpl
 
     public boolean dieRMBeforePrepare(String who)
         throws RemoteException {
-        return true;
+            if(who.equals(ResourceManager.RMINameCars)||who.equals("ALL")) {
+                rmCars.setDieTime("BeforePrepare");
+            }
+            if(who.equals(ResourceManager.RMINameCustomers)||who.equals("ALL")) {
+                rmCustomers.setDieTime("BeforePrepare");
+            }
+            if(who.equals(ResourceManager.RMINameFlights)||who.equals("ALL")) {
+                rmFlights.setDieTime("BeforePrepare");
+            }
+            if(who.equals(ResourceManager.RMINameRooms)||who.equals("ALL")) {
+                rmRooms.setDieTime("BeforePrepare");
+            }
+            if(who.equals(ResourceManager.RMINameReservations)||who.equals("ALL")) {
+                rmReservations.setDieTime("BeforePrepare");
+            }
+            return true;
     }
 
     public boolean dieRMAfterPrepare(String who)
             throws RemoteException {
-        return true;
+            if(who.equals(ResourceManager.RMINameCars)||who.equals("ALL")) {
+                rmCars.setDieTime("AfterPrepare");
+            }
+            if(who.equals(ResourceManager.RMINameCustomers)||who.equals("ALL")) {
+                rmCustomers.setDieTime("AfterPrepare");
+            }
+            if(who.equals(ResourceManager.RMINameFlights)||who.equals("ALL")) {
+                rmFlights.setDieTime("AfterPrepare");
+            }
+            if(who.equals(ResourceManager.RMINameRooms)||who.equals("ALL")) {
+                rmRooms.setDieTime("AfterPrepare");
+            }
+            if(who.equals(ResourceManager.RMINameReservations)||who.equals("ALL")) {
+                rmReservations.setDieTime("AfterPrepare");
+            }
+            return true;
     }
 
     public boolean dieTMBeforeCommit()
             throws RemoteException {
-        return true;
+            tm.setDieTime("BeforeCommit");
+            return true;
     }
 
     public boolean dieTMAfterCommit()
             throws RemoteException {
             tm.setDieTime("AfterCommit");
-        }
-        return true;
+            return true;
     }
 
     public boolean dieRMBeforeCommit(String who)
             throws RemoteException {
-        return true;
+            if(who.equals(ResourceManager.RMINameCars)||who.equals("ALL")) {
+                rmCars.setDieTime("BeforeCommit");
+            }
+            if(who.equals(ResourceManager.RMINameCustomers)||who.equals("ALL")) {
+                rmCustomers.setDieTime("BeforeCommit");
+            }
+            if(who.equals(ResourceManager.RMINameFlights)||who.equals("ALL")) {
+                rmFlights.setDieTime("BeforeCommit");
+            }
+            if(who.equals(ResourceManager.RMINameRooms)||who.equals("ALL")) {
+                rmRooms.setDieTime("BeforeCommit");
+            }
+            if(who.equals(ResourceManager.RMINameReservations)||who.equals("ALL")) {
+                rmReservations.setDieTime("BeforeCommit");
+            }
+            return true;
     }
 
     public boolean dieRMBeforeAbort(String who)
             throws RemoteException {
-        return true;
+            if(who.equals(ResourceManager.RMINameCars)||who.equals("ALL")) {
+                rmCars.setDieTime("BeforeAbort");
+            }
+            if(who.equals(ResourceManager.RMINameCustomers)||who.equals("ALL")) {
+                rmCustomers.setDieTime("BeforeAbort");
+            }
+            if(who.equals(ResourceManager.RMINameFlights)||who.equals("ALL")) {
+                rmFlights.setDieTime(BeforeAbort");
+            }
+            if(who.equals(ResourceManager.RMINameRooms)||who.equals("ALL")) {
+                rmRooms.setDieTime("BeforeAbort");
+            }
+            if(who.equals(ResourceManager.RMINameReservations)||who.equals("ALL")) {
+                rmReservations.setDieTime("BeforeAbort");
+            }
+            return true;
     }
 }
