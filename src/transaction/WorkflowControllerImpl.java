@@ -419,7 +419,7 @@ public class WorkflowControllerImpl
                 System.err.println("wc delete customer: Remote Exception " + e);
                 throw new ResourceManagerUnaccessibleException();
             }
-            //为什么没有deadlockexception
+            //
             return true;
     }
 
