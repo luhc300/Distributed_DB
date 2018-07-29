@@ -9,15 +9,10 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.Properties;
 
-import rm.ResourceManager;
-import rm.ResourceManagerUnaccessibleException;
-import tm.TransactionAbortedException;
-import tm.TransactionCommitException;
-import wc.WorkflowController;
 
 import lockmgr.DeadlockException;
 
-public class Client1 {
+public class Client2 {
     public static void main(String args[]) {
         Properties prop = new Properties();
         try {
@@ -41,7 +36,7 @@ public class Client1 {
             System.err.println("Cannot bind to WC:" + e);
             System.exit(1);
         }
-    }
+    
     //Exception TransactionManager Die Before Commit
     try{
         int xid=wc.start();
@@ -51,29 +46,17 @@ public class Client1 {
                 System.out.println(xid+" Adding car location at "+"HanDan");
             else
                 System.err.println(xid+" Adding car location at "+"HanDan "+"failed!");
-        }catch(DeadlockException e){
-            System.err.println("Dead Lock Exception:"+e);
-        }catch(ResourceManagerUnaccessibleException e){
-            System.err.println("Resource Manager Unaccessible Exception:"+e);
         }catch(RemoteException e){
             System.err.println("Remote Exception:"+e);
-        }catch(InvalidIndexException e){
-            System.err.println("InvalidIndexException: "+e);
         }
 
         try{
             if(wc.addFlight(xid,"LianHangG7652",200,1500))
                 System.out.println(xid+" Adding flight "+"LianHangG7652"+"!");
             else
-                System.out.println(xid+" Adding flight "+"LianHangG7652"+" failed!")
-        }catch(DeadlockException e){
-            System.err.println("Dead Lock Exception:"+e);
-        }catch(ResourceManagerUnaccessibleException e){
-            System.err.println("Resource Manager Unaccessible Exception:"+e);
+                System.out.println(xid+" Adding flight "+"LianHangG7652"+" failed!");
         }catch(RemoteException e){
             System.err.println("Remote Exception:"+e);
-        }catch(InvalidIndexException e){
-            System.err.println("InvalidIndexException: "+e);
         }
 
         try{
@@ -84,7 +67,7 @@ public class Client1 {
             else if(res==0)
                 System.out.println("Transaction " +xid+"falied to commit!");
             else
-                System.out.println(xid+" Commit Exception!")
+                System.out.println(xid+" Commit Exception!");
         }catch(RemoteException e){
             System.err.println("Remote Exception: "+e);
             System.exit(1);
@@ -92,8 +75,6 @@ public class Client1 {
             System.err.println("TransactionAbortedException: "+e);
         }catch(InvalidTransactionException e){
             System.err.println("InvalidTransactionException: "+e);
-        }catch(InvalidIndexException e){
-            System.err.println("InvalidIndexException: "+e);
         }
     }catch(Exception e){
         e.printStackTrace();
@@ -107,29 +88,17 @@ public class Client1 {
                 System.out.println(xid+" Adding car location at "+"HanDan");
             else
                 System.err.println(xid+" Adding car location at "+"HanDan "+"failed!");
-        }catch(DeadlockException e){
-            System.err.println("Dead Lock Exception:"+e);
-        }catch(ResourceManagerUnaccessibleException e){
-            System.err.println("Resource Manager Unaccessible Exception:"+e);
         }catch(RemoteException e){
             System.err.println("Remote Exception:"+e);
-        }catch(InvalidIndexException e){
-            System.err.println("InvalidIndexException: "+e);
         }
 
         try{
             if(wc.addFlight(xid,"LianHangG7652",200,1500))
                 System.out.println(xid+" Adding flight "+"LianHangG7652"+"!");
             else
-                System.out.println(xid+" Adding flight "+"LianHangG7652"+" failed!")
-        }catch(DeadlockException e){
-            System.err.println("Dead Lock Exception:"+e);
-        }catch(ResourceManagerUnaccessibleException e){
-            System.err.println("Resource Manager Unaccessible Exception:"+e);
+                System.out.println(xid+" Adding flight "+"LianHangG7652"+" failed!");
         }catch(RemoteException e){
             System.err.println("Remote Exception:"+e);
-        }catch(InvalidIndexException e){
-            System.err.println("InvalidIndexException: "+e);
         }
 
         try{
@@ -140,7 +109,7 @@ public class Client1 {
             else if(res==0)
                 System.out.println("Transaction " +xid+"falied to commit!");
             else
-                System.out.println(xid+" Commit Exception!")
+                System.out.println(xid+" Commit Exception!");
         }catch(RemoteException e){
             System.err.println("Remote Exception: "+e);
             System.exit(1);
@@ -148,8 +117,6 @@ public class Client1 {
             System.err.println("TransactionAbortedException: "+e);
         }catch(InvalidTransactionException e){
             System.err.println("InvalidTransactionException: "+e);
-        }catch(InvalidIndexException e){
-            System.err.println("InvalidIndexException: "+e);
         }
     }catch(Exception e){
         e.printStackTrace();
@@ -163,29 +130,17 @@ public class Client1 {
                 System.out.println(xid+" Adding car location at "+"HanDan");
             else
                 System.err.println(xid+" Adding car location at "+"HanDan "+"failed!");
-        }catch(DeadlockException e){
-            System.err.println("Dead Lock Exception:"+e);
-        }catch(ResourceManagerUnaccessibleException e){
-            System.err.println("Resource Manager Unaccessible Exception:"+e);
         }catch(RemoteException e){
             System.err.println("Remote Exception:"+e);
-        }catch(InvalidIndexException e){
-            System.err.println("InvalidIndexException: "+e);
         }
 
         try{
             if(wc.addFlight(xid,"LianHangG7652",200,1500))
                 System.out.println(xid+" Adding flight "+"LianHangG7652"+"!");
             else
-                System.out.println(xid+" Adding flight "+"LianHangG7652"+" failed!")
-        }catch(DeadlockException e){
-            System.err.println("Dead Lock Exception:"+e);
-        }catch(ResourceManagerUnaccessibleException e){
-            System.err.println("Resource Manager Unaccessible Exception:"+e);
+                System.out.println(xid+" Adding flight "+"LianHangG7652"+" failed!");
         }catch(RemoteException e){
             System.err.println("Remote Exception:"+e);
-        }catch(InvalidIndexException e){
-            System.err.println("InvalidIndexException: "+e);
         }
 
         try{
@@ -196,7 +151,7 @@ public class Client1 {
             else if(res==0)
                 System.out.println("Transaction " +xid+"falied to commit!");
             else
-                System.out.println(xid+" Commit Exception!")
+                System.out.println(xid+" Commit Exception!");
         }catch(RemoteException e){
             System.err.println("Remote Exception: "+e);
             System.exit(1);
@@ -204,8 +159,6 @@ public class Client1 {
             System.err.println("TransactionAbortedException: "+e);
         }catch(InvalidTransactionException e){
             System.err.println("InvalidTransactionException: "+e);
-        }catch(InvalidIndexException e){
-            System.err.println("InvalidIndexException: "+e);
         }
     }catch(Exception e){
         e.printStackTrace();
@@ -219,29 +172,17 @@ public class Client1 {
                 System.out.println(xid+" Adding car location at "+"HanDan");
             else
                 System.err.println(xid+" Adding car location at "+"HanDan "+"failed!");
-        }catch(DeadlockException e){
-            System.err.println("Dead Lock Exception:"+e);
-        }catch(ResourceManagerUnaccessibleException e){
-            System.err.println("Resource Manager Unaccessible Exception:"+e);
         }catch(RemoteException e){
             System.err.println("Remote Exception:"+e);
-        }catch(InvalidIndexException e){
-            System.err.println("InvalidIndexException: "+e);
         }
 
         try{
             if(wc.addFlight(xid,"LianHangG7652",200,1500))
                 System.out.println(xid+" Adding flight "+"LianHangG7652"+"!");
             else
-                System.out.println(xid+" Adding flight "+"LianHangG7652"+" failed!")
-        }catch(DeadlockException e){
-            System.err.println("Dead Lock Exception:"+e);
-        }catch(ResourceManagerUnaccessibleException e){
-            System.err.println("Resource Manager Unaccessible Exception:"+e);
+                System.out.println(xid+" Adding flight "+"LianHangG7652"+" failed!");
         }catch(RemoteException e){
             System.err.println("Remote Exception:"+e);
-        }catch(InvalidIndexException e){
-            System.err.println("InvalidIndexException: "+e);
         }
 
         try{
@@ -252,7 +193,7 @@ public class Client1 {
             else if(res==0)
                 System.out.println("Transaction " +xid+"falied to commit!");
             else
-                System.out.println(xid+" Commit Exception!")
+                System.out.println(xid+" Commit Exception!");
         }catch(RemoteException e){
             System.err.println("Remote Exception: "+e);
             System.exit(1);
@@ -260,8 +201,6 @@ public class Client1 {
             System.err.println("TransactionAbortedException: "+e);
         }catch(InvalidTransactionException e){
             System.err.println("InvalidTransactionException: "+e);
-        }catch(InvalidIndexException e){
-            System.err.println("InvalidIndexException: "+e);
         }
     }catch(Exception e){
         e.printStackTrace();
@@ -276,29 +215,17 @@ public class Client1 {
                 System.out.println(xid+" Adding car location at "+"HanDan");
             else
                 System.err.println(xid+" Adding car location at "+"HanDan "+"failed!");
-        }catch(DeadlockException e){
-            System.err.println("Dead Lock Exception:"+e);
-        }catch(ResourceManagerUnaccessibleException e){
-            System.err.println("Resource Manager Unaccessible Exception:"+e);
         }catch(RemoteException e){
             System.err.println("Remote Exception:"+e);
-        }catch(InvalidIndexException e){
-            System.err.println("InvalidIndexException: "+e);
         }
 
         try{
             if(wc.addFlight(xid,"LianHangG7652",200,1500))
                 System.out.println(xid+" Adding flight "+"LianHangG7652"+"!");
             else
-                System.out.println(xid+" Adding flight "+"LianHangG7652"+" failed!")
-        }catch(DeadlockException e){
-            System.err.println("Dead Lock Exception:"+e);
-        }catch(ResourceManagerUnaccessibleException e){
-            System.err.println("Resource Manager Unaccessible Exception:"+e);
+                System.out.println(xid+" Adding flight "+"LianHangG7652"+" failed!");
         }catch(RemoteException e){
             System.err.println("Remote Exception:"+e);
-        }catch(InvalidIndexException e){
-            System.err.println("InvalidIndexException: "+e);
         }
 
         try{
@@ -309,7 +236,7 @@ public class Client1 {
             else if(res==0)
                 System.out.println("Transaction " +xid+"falied to commit!");
             else
-                System.out.println(xid+" Commit Exception!")
+                System.out.println(xid+" Commit Exception!");
         }catch(RemoteException e){
             System.err.println("Remote Exception: "+e);
             System.exit(1);
@@ -317,8 +244,6 @@ public class Client1 {
             System.err.println("TransactionAbortedException: "+e);
         }catch(InvalidTransactionException e){
             System.err.println("InvalidTransactionException: "+e);
-        }catch(InvalidIndexException e){
-            System.err.println("InvalidIndexException: "+e);
         }
     }catch(Exception e){
         e.printStackTrace();
@@ -332,10 +257,6 @@ public class Client1 {
                 System.out.println(xid+" Adding car location at "+"HanDan");
             else
                 System.err.println(xid+" Adding car location at "+"HanDan "+"failed!");
-        }catch(DeadlockException e){
-            System.err.println("Dead Lock Exception:"+e);
-        }catch(ResourceManagerUnaccessibleException e){
-            System.err.println("Resource Manager Unaccessible Exception:"+e);
         }catch(RemoteException e){
             System.err.println("Remote Exception:"+e);
         }
@@ -344,11 +265,7 @@ public class Client1 {
             if(wc.addFlight(xid,"LianHangG7652",200,1500))
                 System.out.println(xid+" Adding flight "+"LianHangG7652"+"!");
             else
-                System.out.println(xid+" Adding flight "+"LianHangG7652"+" failed!")
-        }catch(DeadlockException e){
-            System.err.println("Dead Lock Exception:"+e);
-        }catch(ResourceManagerUnaccessibleException e){
-            System.err.println("Resource Manager Unaccessible Exception:"+e);
+                System.out.println(xid+" Adding flight "+"LianHangG7652"+" failed!");
         }catch(RemoteException e){
             System.err.println("Remote Exception:"+e);
         }
@@ -372,10 +289,6 @@ public class Client1 {
                 System.out.println(xid+" Adding car location at "+"HanDan");
             else
                 System.err.println(xid+" Adding car location at "+"HanDan "+"failed!");
-        }catch(DeadlockException e){
-            System.err.println("Dead Lock Exception:"+e);
-        }catch(ResourceManagerUnaccessibleException e){
-            System.err.println("Resource Manager Unaccessible Exception:"+e);
         }catch(RemoteException e){
             System.err.println("Remote Exception:"+e);
         }
@@ -384,11 +297,7 @@ public class Client1 {
             if(wc.addFlight(xid,"LianHangG7652",200,1500))
                 System.out.println(xid+" Adding flight "+"LianHangG7652"+"!");
             else
-                System.out.println(xid+" Adding flight "+"LianHangG7652"+" failed!")
-        }catch(DeadlockException e){
-            System.err.println("Dead Lock Exception:"+e);
-        }catch(ResourceManagerUnaccessibleException e){
-            System.err.println("Resource Manager Unaccessible Exception:"+e);
+                System.out.println(xid+" Adding flight "+"LianHangG7652"+" failed!");
         }catch(RemoteException e){
             System.err.println("Remote Exception:"+e);
         }
@@ -403,4 +312,5 @@ public class Client1 {
     } catch (Exception e) {
         System.err.println(e);
     }
+	}
 }

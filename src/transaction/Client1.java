@@ -9,12 +9,6 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.Properties;
 
-import rm.ResourceManager;
-import rm.ResourceManagerUnaccessibleException;
-import tm.TransactionAbortedException;
-import tm.TransactionCommitException;
-import wc.WorkflowController;
-
 import lockmgr.DeadlockException;
 
 public class Client1 {
@@ -41,7 +35,6 @@ public class Client1 {
             System.err.println("Cannot bind to WC:" + e);
             System.exit(1);
         }
-    }
     //Test adding customers,hotel,flight,cars and commit a transaction.
     try{
         int xid=wc.start();
@@ -84,7 +77,7 @@ public class Client1 {
         else
             System.err.println("Transaction Exception!");
     }catch(Exception e){
-        system.err.println("Exception Info: "+e);
+        System.err.println("Exception Info: "+e);
     }
     //Test query
     try{
@@ -113,11 +106,11 @@ public class Client1 {
     //Test delete operations
     try{
         int xid=wc.start();
-        if(wc.deleteRooms(xid,"ZhangJiang"))
+        if(wc.deleteRooms(xid,"ZhangJiang",50))
             System.out.println("Transaction "+xid+" Delete hotel location at "+"ZhangJiang!");
         else
             System.err.println("Transaction "+xid+" Delete hotel location at "+"ZhangJiang"+"failed!");
-        if(wc.deleteCars(xid,"ZhangJiang"))
+        if(wc.deleteCars(xid,"ZhangJiang",20))
             System.out.println("Transaction "+xid+" Delete car location at "+"ZhangJiang!");
         else
             System.err.println("Transaction "+xid+" Delete car location at "+"ZhangJiang"+"failed!");
@@ -128,4 +121,5 @@ public class Client1 {
     }catch(Exception e){
         System.err.println("Exception info: "+e);
     }
+}
 }

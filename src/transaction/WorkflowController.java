@@ -360,6 +360,17 @@ public interface WorkflowController extends Remote {
      * @param who which RM to kill; must be "RMFlights", "RMRooms", "RMCars", or "RMCustomers".
      * @return true on success, false on failure.
      */
+	public boolean dieRM(String who, String when)
+	throws RemoteException;
+    /**
+     * Sets a flag so that the RM fails when it next tries to prepare,
+     * but before it gets a chance to save the update list to disk.
+     * <p>
+     * This method is used for testing and is not part of a transaction.
+     *
+     * @param who which RM to kill; must be "RMFlights", "RMRooms", "RMCars", or "RMCustomers".
+     * @return true on success, false on failure.
+     */
     public boolean dieRMBeforePrepare(String who)
             throws RemoteException;
 

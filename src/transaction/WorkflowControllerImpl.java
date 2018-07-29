@@ -743,7 +743,22 @@ public class WorkflowControllerImpl
         }
         return true;
     }
-
+	public boolean dieRM(String who, String when)
+	throws RemoteException {
+    	if (who.equals(ResourceManager.RMINameFlights) || who.equals("ALL")) {
+    		rmFlights.setDieTime(when);
+    	}
+    	if (who.equals(ResourceManager.RMINameCars) || who.equals("ALL")) {
+    		rmCars.setDieTime(when);
+    	}
+    	if (who.equals(ResourceManager.RMINameCustomers) || who.equals("ALL")) {
+    		rmCustomers.setDieTime(when);
+    	}
+    	if (who.equals(ResourceManager.RMINameRooms) || who.equals("ALL")) {
+    		rmRooms.setDieTime(when);
+    	}
+    	return true;
+    }
     public boolean dieRMAfterEnlist(String who)
         throws RemoteException {
             if (who.equals(ResourceManager.RMINameFlights) || who.equals("ALL")) {
