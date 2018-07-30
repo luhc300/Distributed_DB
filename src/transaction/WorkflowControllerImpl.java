@@ -285,7 +285,7 @@ public class WorkflowControllerImpl
             ResourceItem ri = rmRooms.query(xid, WorkflowController.RoomsTableName, location);
             if (ri!=null){
                 if(numRooms>0 && Integer.parseInt(ri.getIndex("availNum").toString())>=numRooms) {
-                    ResourceItem newR = new ResourceItemImpl(ResourceItem.RIRooms, "location",
+                    ResourceItem newR = new ResourceItemImpl(ResourceItem.RIRooms, location,
                             new String[]{"location", "price", "roomNum", "availNum"},
                             new String[]{location, ri.getIndex("price").toString(),
                                     Integer.toString((Integer.parseInt(ri.getIndex("roomNum").toString()) - numRooms)),
@@ -672,13 +672,13 @@ public class WorkflowControllerImpl
                     int availNum = Integer.parseInt(ri.getIndex("availNum").toString());
                     if(availNum>=1){
                         ResourceItem newRoom = new ResourceItemImpl(
-                                ResourceItem.RIRooms, "location",
+                                ResourceItem.RIRooms, location,
                                 new String[]{"location", "price", "roomNum", "availNum"},
                                 new String[]{location, ri.getIndex("price").toString(), ri.getIndex("roomNum").toString(), Integer.toString(availNum-1)});
-                        if(!rmRooms.update(xid, WorkflowController.RoomsTableName, location, newRoom)) {
+                        if(!rmRooms.update(xid, WorkflowController.RoomsTableName, ri.getKey(), newRoom)) {
                             return false;
                         }
-                        ResourceItem newroomRes = new ResourceItemImpl(ResourceItem.RIReservations, new String[]{"custName", "resvType", "resvKey"}, new String[]{custName, 2+"", location});
+                        ResourceItem newroomRes = new Reservation(custName, hotelType, location);
                         if(!rmReservations.insert(xid, WorkflowController.ReservationTableName, newroomRes)){
                             return false;
                         }
@@ -709,13 +709,14 @@ public class WorkflowControllerImpl
             e1.printStackTrace();
             return false;
         }
-        String rmiPort[] = new String[5];
+        String rmiPort[] = new String[6];
         rmiPort[0] = prop.getProperty("rm.RMFlights.port");
         rmiPort[1] = prop.getProperty("rm.RMRooms.port");
         rmiPort[2] = prop.getProperty("rm.RMCars.port");
         rmiPort[3] = prop.getProperty("rm.RMCustomers.port");
-        rmiPort[4] = prop.getProperty("tm.port");
-        for (int i = 0; i < 5; i++) {
+        rmiPort[4] = prop.getProperty("rm.RMReservations.port");
+        rmiPort[5] = prop.getProperty("tm.port");
+        for (int i = 0; i < 6; i++) {
             if (rmiPort[i] == null) {
                 rmiPort[i] = "";
             } else if (!rmiPort[i].equals("")) {
@@ -731,7 +732,9 @@ public class WorkflowControllerImpl
             System.out.println("WC bound to RMCars");
             rmCustomers = (ResourceManager) Naming.lookup(rmiPort[3] + ResourceManager.RMINameCustomers);
             System.out.println("WC bound to RMCustomers");
-            tm = (TransactionManager) Naming.lookup(rmiPort[4] + TransactionManager.RMIName);
+            rmReservations = (ResourceManager) Naming.lookup(rmiPort[4] + ResourceManager.RMINameReservations);
+            System.out.println("WC bound to RMReservations");
+            tm = (TransactionManager) Naming.lookup(rmiPort[5] + TransactionManager.RMIName);
             System.out.println("WC bound to TM");
         } catch (Exception e) {
             System.err.println("WC cannot bind to some component:" + e);

@@ -43,17 +43,17 @@ public class Client1 {
         else
             System.err.println("Transaction "+xid+ " Adding customer"+" Jett failed!");
         if(wc.addRooms(xid,"ZhangJiang",100,400))
-            System.out.println("Transaction "+xid+ " Adding location"+" ZhangJiang!");
+            System.out.println("Transaction "+xid+ " Adding Hotel at location"+" ZhangJiang!");
         else
-            System.err.println("Transaction "+xid+ " Adding location"+" ZhangJiang failed!");
+            System.err.println("Transaction "+xid+ " Adding Hotel at location"+" ZhangJiang failed!");
         if(wc.addFlight(xid,"ChuanHang5731",300,1000))
             System.out.println("Transaction "+xid+ " Adding flight"+" ChuanHang5731!");
         else
             System.err.println("Transaction "+xid+ " Adding flight"+" ChuanHang5731 failed!");
         if(wc.addCars(xid,"ZhangJiang",100,50))
-            System.out.println("Transaction "+xid+ " Adding location"+"ZhangJiang!");
+            System.out.println("Transaction "+xid+ " Adding Car at location "+"ZhangJiang!");
         else
-            System.err.println("Transaction "+xid+" Adding location"+" ZhangJiang!");
+            System.err.println("Transaction "+xid+" Adding Car at location "+" ZhangJiang!");
         if(wc.commit(xid)==1)
             System.out.println("Transaction "+xid+" commited successfully!");
         else

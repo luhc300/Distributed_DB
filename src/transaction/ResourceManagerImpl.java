@@ -437,9 +437,11 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
         if (xid < 0) {
             throw new InvalidTransactionException(xid, "Xid must be positive.");
         }
-        if (!key.equals(newItem.getKey()))
+        if (!key.equals(newItem.getKey())) {
+            System.out.println(key);
+            System.out.println(newItem.getKey());
             throw new IllegalArgumentException();
-
+        }
         try {
             synchronized (xids) {
                 xids.add(new Integer(xid));

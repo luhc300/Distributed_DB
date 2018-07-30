@@ -37,50 +37,10 @@ public class Client2 {
             System.exit(1);
         }
     
-    //Exception TransactionManager Die Before Commit
-    try{
-        int xid=wc.start();
-        wc.dieTMBeforeCommit();
-        try{
-            if(wc.addCars(xid,"HanDan",200,100))
-                System.out.println(xid+" Adding car location at "+"HanDan");
-            else
-                System.err.println(xid+" Adding car location at "+"HanDan "+"failed!");
-        }catch(RemoteException e){
-            System.err.println("Remote Exception:"+e);
-        }
 
-        try{
-            if(wc.addFlight(xid,"LianHangG7652",200,1500))
-                System.out.println(xid+" Adding flight "+"LianHangG7652"+"!");
-            else
-                System.out.println(xid+" Adding flight "+"LianHangG7652"+" failed!");
-        }catch(RemoteException e){
-            System.err.println("Remote Exception:"+e);
-        }
-
-        try{
-            int res=0;
-            res=wc.commit(xid);
-            if(res==1)
-                System.out.println(xid+" Commit succeeded!");
-            else if(res==0)
-                System.out.println("Transaction " +xid+"falied to commit!");
-            else
-                System.out.println(xid+" Commit Exception!");
-        }catch(RemoteException e){
-            System.err.println("Remote Exception: "+e);
-            System.exit(1);
-        }catch(TransactionAbortedException e){
-            System.err.println("TransactionAbortedException: "+e);
-        }catch(InvalidTransactionException e){
-            System.err.println("InvalidTransactionException: "+e);
-        }
-    }catch(Exception e){
-        e.printStackTrace();
-    }
     //Exception TransactionManager Die After Commit
     try{
+            System.out.println("TransactionManager Die After Commit");
         int xid=wc.start();
         wc.dieTMAfterCommit();
         try{
@@ -112,9 +72,9 @@ public class Client2 {
                 System.out.println(xid+" Commit Exception!");
         }catch(RemoteException e){
             System.err.println("Remote Exception: "+e);
-            System.exit(1);
         }catch(TransactionAbortedException e){
             System.err.println("TransactionAbortedException: "+e);
+            System.out.println("Waiting");
         }catch(InvalidTransactionException e){
             System.err.println("InvalidTransactionException: "+e);
         }
@@ -123,6 +83,7 @@ public class Client2 {
     }
     //Exception ResourceManager Die Before Commit
     try{
+        System.out.println(" ResourceManager Die Before Commit");
         int xid=wc.start();
         wc.dieRM(ResourceManager.RMINameFlights,"BeforeCommit");
         try{
@@ -154,7 +115,6 @@ public class Client2 {
                 System.out.println(xid+" Commit Exception!");
         }catch(RemoteException e){
             System.err.println("Remote Exception: "+e);
-            System.exit(1);
         }catch(TransactionAbortedException e){
             System.err.println("TransactionAbortedException: "+e);
         }catch(InvalidTransactionException e){
@@ -165,6 +125,7 @@ public class Client2 {
     }
     //Exception ResourceManager Die Before Abort
     try{
+        System.out.println(" ResourceManager Die Before Abort");
         int xid=wc.start();
         wc.dieRM(ResourceManager.RMINameFlights,"BeforeAbort");
         try{
@@ -196,7 +157,6 @@ public class Client2 {
                 System.out.println(xid+" Commit Exception!");
         }catch(RemoteException e){
             System.err.println("Remote Exception: "+e);
-            System.exit(1);
         }catch(TransactionAbortedException e){
             System.err.println("TransactionAbortedException: "+e);
         }catch(InvalidTransactionException e){
@@ -208,6 +168,7 @@ public class Client2 {
 
     //Exception ResourceManager Die After Enlist
     try{
+        System.out.println(" ResourceManager Die After Enlist");
         int xid=wc.start();
         wc.dieRMAfterEnlist(ResourceManager.RMINameCars);
         try{
@@ -239,7 +200,6 @@ public class Client2 {
                 System.out.println(xid+" Commit Exception!");
         }catch(RemoteException e){
             System.err.println("Remote Exception: "+e);
-            System.exit(1);
         }catch(TransactionAbortedException e){
             System.err.println("TransactionAbortedException: "+e);
         }catch(InvalidTransactionException e){
@@ -250,6 +210,7 @@ public class Client2 {
     }
 
     try {
+        System.out.println(" ResourceManager Die Before Prepare");
         int xid = wc.start();
         wc.dieRM(ResourceManager.RMINameFlights, "AfterPrepare");
         try{
@@ -282,6 +243,7 @@ public class Client2 {
     }
 
     try {
+        System.out.println(" ResourceManager Die After Prepare");
         int xid = wc.start();
         wc.dieRM(ResourceManager.RMINameFlights, "BeforePrepare");
         try{

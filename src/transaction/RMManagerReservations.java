@@ -36,7 +36,7 @@ public class RMManagerReservations{
         ResourceManagerImpl obj = null;
         try {
             obj = new ResourceManagerImpl(rmiName);
-            Naming.rebind("//localhost/" + rmiName, obj);
+            _rmiRegistry.bind(rmiName, obj);
             System.out.println(rmiName + " bound");
         } catch (Exception e) {
             System.err.println(rmiName + " not bound:" + e);
