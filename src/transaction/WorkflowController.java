@@ -32,7 +32,11 @@ public interface WorkflowController extends Remote {
     //////////
     // TRANSACTION INTERFACE
     //////////
-
+    public static final String FlightTableName = "flights";
+    public static final String CarsTableName = "cars";
+    public static final String RoomsTableName = "rooms";
+    public static final String CustomersTableName = "customers";
+    public static final String ReservationTableName = "reservations";
     /**
      * Start a new transaction, and return its transaction id.
      *
@@ -65,7 +69,7 @@ public interface WorkflowController extends Remote {
      */
     public int abort(int xid)
             throws RemoteException,
-            InvalidTransactionException;
+            InvalidTransactionException,TransactionAbortedException;
 
 
     //////////
@@ -139,7 +143,7 @@ public interface WorkflowController extends Remote {
     public boolean deleteRooms(int xid, String location, int numRooms)
             throws RemoteException,
             TransactionAbortedException,
-            InvalidTransactionException;
+            InvalidTransactionException,ResourceManagerUnaccessibleException;
 
     /**
      * Add cars to a location.
@@ -202,7 +206,8 @@ public interface WorkflowController extends Remote {
     public boolean deleteCustomer(int xid, String custName)
             throws RemoteException,
             TransactionAbortedException,
-            InvalidTransactionException;
+            InvalidTransactionException,
+            ResourceManagerUnaccessibleException;
 
 
     //////////
