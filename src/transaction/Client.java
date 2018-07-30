@@ -47,7 +47,7 @@ public class Client {
                 System.err.println("Reserve flight failed");
             }
             System.out.println("Flight 347 now has " + wc.queryFlight(xid, "347") + " seats.");
-            if (!wc.commit(xid)) {
+            if (wc.commit(xid)==0) {
                 System.err.println("Commit failed");
             }
         } catch (Exception e) {

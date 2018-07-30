@@ -1,11 +1,16 @@
 package transaction;
 
+import lockmgr.DeadlockException;
+
 import java.io.FileInputStream;
 import java.rmi.Naming;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Properties;
+
 
 /**
  * Workflow Controller for the Distributed Travel Reservation System.
@@ -30,6 +35,7 @@ public class WorkflowControllerImpl
     protected ResourceManager rmRooms = null;
     protected ResourceManager rmCars = null;
     protected ResourceManager rmCustomers = null;
+    protected ResourceManager rmReservations = null;
     protected TransactionManager tm = null;
 
     public static void main(String args[]) {
@@ -128,7 +134,7 @@ public class WorkflowControllerImpl
             if(tm.commit(xid)){
                 result=1;
             }
-        }catch(TransactionCommitException e){
+        }catch(TransactionCommittedException e){
                 result=-1;
         }
         return result;
@@ -190,7 +196,7 @@ public class WorkflowControllerImpl
                 e.printStackTrace();
         }
         if(!flag){
-            System.out.println("Xid"=xid+"Addition of  flight flightNum:"+ flightNum+" failed!");
+            System.out.println("Xid"+xid+"Addition of  flight flightNum:"+ flightNum+" failed!");
             return false;
         }
         return true;
@@ -278,12 +284,12 @@ public class WorkflowControllerImpl
         try {
             ResourceItem ri = rmRooms.query(xid, WorkflowController.RoomsTableName, location);
             if (ri!=null){
-                if(numRooms>0 && Integer.parseInt(ri.getIndex("availNum"))>=numRooms) {
+                if(numRooms>0 && Integer.parseInt(ri.getIndex("availNum").toString())>=numRooms) {
                     ResourceItem newR = new ResourceItemImpl(ResourceItem.RIRooms, "location",
                             new String[]{"location", "price", "roomNum", "availNum"},
-                            new String[]{location, ri.getIndex("price"),
-                                    Integer.toString((Integer.parseInt(ri.getIndex("roomNum")) - numRooms)),
-                                    Integer.toString((Integer.parseInt(ri.getIndex("availNum")) - numRooms))});
+                            new String[]{location, ri.getIndex("price").toString(),
+                                    Integer.toString((Integer.parseInt(ri.getIndex("roomNum").toString()) - numRooms)),
+                                    Integer.toString((Integer.parseInt(ri.getIndex("availNum").toString()) - numRooms))});
                     if (!rmRooms.update(xid, WorkflowController.RoomsTableName, location, newR)) {
                         return false;
                     }
@@ -294,6 +300,10 @@ public class WorkflowControllerImpl
             }
         } catch (RemoteException e) {
             throw new ResourceManagerUnaccessibleException();
+        }catch(DeadlockException e){
+            System.err.println("DeadLock "+e);
+        }catch(InvalidIndexException e){
+            System.err.println("InvalidIndexException "+e);
         }
         return true;
     }
@@ -403,8 +413,7 @@ public class WorkflowControllerImpl
     }
 
     public boolean deleteCustomer(int xid, String custName)
-            throws RemoteException, TransactionAbortedException, InvalidTransactionException {
-        ResourceManagerUnaccessibleException {
+            throws RemoteException, TransactionAbortedException,InvalidTransactionException,ResourceManagerUnaccessibleException {
             try {
                 ResourceItem ri = rmCustomers.query(xid, WorkflowController.CustomersTableName, custName);
                 if (ri != null) {
@@ -418,6 +427,10 @@ public class WorkflowControllerImpl
             } catch (RemoteException e) {
                 System.err.println("wc delete customer: Remote Exception " + e);
                 throw new ResourceManagerUnaccessibleException();
+            }catch(DeadlockException e){
+                System.out.println("DeadLock "+e);
+            }catch(InvalidIndexException e){
+                System.out.println("InvalidException "+e);
             }
             //
             return true;
@@ -430,14 +443,17 @@ public class WorkflowControllerImpl
             try {
                 ResourceItem ri = rmFlights.query(xid, WorkflowController.FlightTableName, flightNum);
                 if (ri != null) {
-                    flightcounter = Integer.parseInt(ri.getIndex("availNum"));
+                    flightcounter = Integer.parseInt(ri.getIndex("availNum").toString());
                 } else {
                     flightcounter = -1;
                 }
             } catch (RemoteException e) {
                 flightcounter = -1;
                 System.err.println("wc query flight: Remote Exception " + e);
-                throw new ResourceManagerUnaccessibleException();
+            }catch(DeadlockException e){
+                System.err.println("Deadlock Exception "+e);
+            }catch(InvalidIndexException e){
+                System.err.println("Deadlock Exception "+e);
             }
             return flightcounter;
     }
@@ -448,14 +464,17 @@ public class WorkflowControllerImpl
             try {
                 ResourceItem ri = rmFlights.query(xid, WorkflowController.FlightTableName, flightNum);
                 if (ri != null) {
-                    flightprice = Integer.parseInt(ri.getIndex("price"));
+                    flightprice = Integer.parseInt(ri.getIndex("price").toString());
                 } else {
                     flightprice = -1;
                 }
             } catch (RemoteException e) {
                 flightprice = -1;
                 System.err.println("wc query flight price: Remote Exception " + e);
-                throw new ResourceManagerUnaccessibleException();
+            }catch(DeadlockException e){
+                System.err.println("Deadlock Exception "+e);
+            }catch(InvalidIndexException e){
+                System.err.println("Deadlock Exception "+e);
             }
             return flightprice;
     }
@@ -465,14 +484,17 @@ public class WorkflowControllerImpl
             try {
                 ResourceItem ri = rmRooms.query(xid, WorkflowController.RoomsTableName, location);
                 if (ri != null) {
-                    roomscounter = Integer.parseInt(ri.getIndex("availNum"));
+                    roomscounter = Integer.parseInt(ri.getIndex("availNum").toString());
                 } else {
                     roomscounter = -1;
                 }
             } catch (RemoteException e) {
                 roomscounter = -1;
                 System.err.println("wc query room: Remote Exception " + e);
-                throw new ResourceManagerUnaccessibleException();
+            }catch(DeadlockException e){
+                System.err.println("Deadlock Exception "+e);
+            }catch(InvalidIndexException e){
+                System.err.println("Deadlock Exception "+e);
             }
             return roomscounter;
     }
@@ -482,14 +504,17 @@ public class WorkflowControllerImpl
             try {
                 ResourceItem ri = rmRooms.query(xid, WorkflowController.RoomsTableName, location);
                 if (ri != null) {
-                    roomsprice = Integer.parseInt(ri.getIndex("price"));
+                    roomsprice = Integer.parseInt(ri.getIndex("price").toString());
                 } else {
                     roomsprice = -1;
                 }
             } catch (RemoteException e) {
                 roomsprice = -1;
                 System.err.println("wc query room price: Remote Exception " + e);
-                throw new ResourceManagerUnaccessibleException();
+            }catch(DeadlockException e){
+                System.err.println("Deadlock Exception "+e);
+            }catch(InvalidIndexException e){
+                System.err.println("Deadlock Exception "+e);
             }
             return roomsprice;
     }
@@ -500,14 +525,17 @@ public class WorkflowControllerImpl
             try {
                 ResourceItem ri = rmCars.query(xid, WorkflowController.CarsTableName, location);
                 if (ri != null) {
-                    carscounter = Integer.parseInt(ri.getIndex("availNum"));
+                    carscounter = Integer.parseInt(ri.getIndex("availNum").toString());
                 } else {
                     carscounter = -1;
                 }
             } catch (RemoteException e) {
                 carscounter = -1;
                 System.err.println("wc query car: Remote Exception " + e);
-                throw new ResourceManagerUnaccessibleException();
+            }catch(DeadlockException e){
+                System.err.println("Deadlock Exception "+e);
+            }catch(InvalidIndexException e){
+                System.err.println("Deadlock Exception "+e);
             }
             return carscounter;
     }
@@ -518,14 +546,17 @@ public class WorkflowControllerImpl
             try {
                 ResourceItem ri = rmCars.query(xid, WorkflowController.CarsTableName, location);
                 if (ri != null) {
-                    carsprice = Integer.parseInt(ri.getIndex("price"));
+                    carsprice = Integer.parseInt(ri.getIndex("price").toString());
                 } else {
                     carsprice = -1;
                 }
             } catch (RemoteException e) {
                 carsprice = -1;
                 System.err.println("wc query car price: Remote Exception " + e);
-                throw new ResourceManagerUnaccessibleException();
+            }catch(DeadlockException e){
+                System.err.println("Deadlock Exception "+e);
+            }catch(InvalidIndexException e){
+                System.err.println("Deadlock Exception "+e);
             }
             return carsprice;
     }
@@ -533,17 +564,22 @@ public class WorkflowControllerImpl
     public int queryCustomerBill(int xid, String custName)
             throws RemoteException, TransactionAbortedException, InvalidTransactionException {
             int totalBill = 0;
-            Collection c = rmReservations.query(xid, WorkflowController.ReservationTableName,"custName",custName);
-            for (Iterator iter = c.iterator(); iter.hasNext();)
-            {
-                ResourceItem r = (ResourceItem)iter.next();
-                if(Integer.parseInt(r.getIndex("resvType"))==1){
-                    totalBill += queryFlightPrice(xid,r.getIndex("resvKey"));
-                }else if (Integer.parseInt(r.getIndex("resvType"))==2){
-                    totalBill += queryRoomsPrice(xid,r.getIndex("resvKey"));
-                }else if(Integer.parseInt(r.getIndex("resvType"))==3){
-                    totalBill += queryCarsPrice(xid,r.getIndex("resvKey"));
+            try {
+                Collection c = rmReservations.query(xid, WorkflowController.ReservationTableName, "custName", custName);
+                for (Iterator iter = c.iterator(); iter.hasNext(); ) {
+                    ResourceItem r = (ResourceItem) iter.next();
+                    if (Integer.parseInt(r.getIndex("resvType").toString()) == 1) {
+                        totalBill += queryFlightPrice(xid, r.getIndex("resvKey").toString());
+                    } else if (Integer.parseInt(r.getIndex("resvType").toString()) == 2) {
+                        totalBill += queryRoomsPrice(xid, r.getIndex("resvKey").toString());
+                    } else if (Integer.parseInt(r.getIndex("resvType").toString()) == 3) {
+                        totalBill += queryCarsPrice(xid, r.getIndex("resvKey").toString());
+                    }
                 }
+            }catch(DeadlockException e){
+                System.err.println("Deadlock Exception "+e);
+            }catch(InvalidIndexException e){
+                System.err.println("Deadlock Exception "+e);
             }
             return totalBill;
     }
@@ -633,9 +669,12 @@ public class WorkflowControllerImpl
                 ResourceItem ri = rmRooms.query(xid, WorkflowController.RoomsTableName, location);
                 ResourceItem ri1 = rmCustomers.query(xid, WorkflowController.CustomersTableName, custName);
                 if (ri != null && ri1!= null) {
-                    int availNum = Integer.parseInt(ri.getIndex("availNum"));
+                    int availNum = Integer.parseInt(ri.getIndex("availNum").toString());
                     if(availNum>=1){
-                        ResourceItem newRoom = new ResourceItemImpl(ResourceItem.RIRooms, "location", new String[]{"location", "price", "roomNum", "availNum"}, new String[]{location, ri.getIndex("price"), ri.getIndex("roomNum"), Integer.toString(availNum-1))});
+                        ResourceItem newRoom = new ResourceItemImpl(
+                                ResourceItem.RIRooms, "location",
+                                new String[]{"location", "price", "roomNum", "availNum"},
+                                new String[]{location, ri.getIndex("price").toString(), ri.getIndex("roomNum").toString(), Integer.toString(availNum-1)});
                         if(!rmRooms.update(xid, WorkflowController.RoomsTableName, location, newRoom)) {
                             return false;
                         }
@@ -652,7 +691,10 @@ public class WorkflowControllerImpl
                 }
             } catch (RemoteException e) {
                 System.err.println("wc resv room: Remote Exception " + e);
-                throw new ResourceManagerUnaccessibleException();
+            }catch(DeadlockException e){
+                System.err.println("Deadlock Exception "+e);
+            }catch(InvalidIndexException e){
+                System.err.println("Deadlock Exception "+e);
             }
             return true;
     }
@@ -857,7 +899,7 @@ public class WorkflowControllerImpl
                 rmCustomers.setDieTime("BeforeAbort");
             }
             if(who.equals(ResourceManager.RMINameFlights)||who.equals("ALL")) {
-                rmFlights.setDieTime(BeforeAbort");
+                rmFlights.setDieTime("BeforeAbort");
             }
             if(who.equals(ResourceManager.RMINameRooms)||who.equals("ALL")) {
                 rmRooms.setDieTime("BeforeAbort");

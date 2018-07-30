@@ -1,7 +1,6 @@
 package transaction;
 
 import java.io.Serializable;
-import InvalidIndexExceprion;
 public class Customers implements ResourceItem, Serializable{
     private String custName;
     private boolean isdeleted=false;
@@ -23,11 +22,11 @@ public class Customers implements ResourceItem, Serializable{
 
     @Override
     public String[] getColumnValues(){
-        return new String[]{custname};
+        return new String[]{custName};
     }
 
     @Override
-    public String getIndex{String indexName} throws InvalidIndexException{
+    public String getIndex(String indexName) throws InvalidIndexException{
         if(indexName.equals("custName")){
             return custName;
         }

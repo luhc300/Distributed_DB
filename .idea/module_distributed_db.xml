@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_distributed_db" default="compile.module.distributed_db">
+  <dirname property="module.distributed_db.basedir" file="${ant.file.module_distributed_db}"/>
+  
+  <property name="module.jdk.home.distributed_db" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.distributed_db" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.distributed_db" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.distributed_db" value="-encoding UTF-8 -source 9 -target 9 ${compiler.args}"/>
+  
+  <property name="distributed_db.output.dir" value="${module.distributed_db.basedir}/../../Distributed_DB-master"/>
+  <property name="distributed_db.testoutput.dir" value="${module.distributed_db.basedir}/../../Distributed_DB-master"/>
+  
+  <path id="distributed_db.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="distributed_db.module.production.classpath">
+    <path refid="${module.jdk.classpath.distributed_db}"/>
+  </path>
+  
+  <path id="distributed_db.runtime.production.module.classpath">
+    <pathelement location="${distributed_db.output.dir}"/>
+  </path>
+  
+  <path id="distributed_db.module.classpath">
+    <path refid="${module.jdk.classpath.distributed_db}"/>
+    <pathelement location="${distributed_db.output.dir}"/>
+  </path>
+  
+  <path id="distributed_db.runtime.module.classpath">
+    <pathelement location="${distributed_db.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.distributed_db">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.distributed_db">
+    <patternset refid="excluded.from.module.distributed_db"/>
+  </patternset>
+  
+  
+  <target name="compile.module.distributed_db" depends="compile.module.distributed_db.production,compile.module.distributed_db.tests" description="Compile module Distributed_DB"/>
+  
+  <target name="compile.module.distributed_db.production" depends="register.custom.compilers" description="Compile module Distributed_DB; production classes"/>
+  
+  <target name="compile.module.distributed_db.tests" depends="register.custom.compilers,compile.module.distributed_db.production" description="compile module Distributed_DB; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.distributed_db" description="cleanup module">
+    <delete dir="${distributed_db.output.dir}"/>
+    <delete dir="${distributed_db.testoutput.dir}"/>
+  </target>
+</project>

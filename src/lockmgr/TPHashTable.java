@@ -6,7 +6,7 @@ import java.util.Enumeration;
 /*
  * HashTable class for the Lock Manager.
  */
-
+@SuppressWarnings("unchecked")
 public class TPHashTable {
     private static final int HASH_DEPTH = 8;
 

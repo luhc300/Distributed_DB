@@ -28,4 +28,9 @@ public interface ResourceItem extends Cloneable, Serializable {
     public void delete();
 
     public Object clone();
+    public static final String RICars = "cars";
+    public static final String RIFlights = "flights";
+    public static final String RIRooms = "rooms";
+    public static final String RICustomers = "customers";
+    public static final String RIReservations = "reservations";
 }
