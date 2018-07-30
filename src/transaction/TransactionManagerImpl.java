@@ -105,7 +105,7 @@ public class TransactionManagerImpl
             dieNow();
         }
         if(xid < 0){
-            throw new InvalidTransactionException(xid, "Negative xid found");
+            throw new InvalidTransactionException(xid, "Xid must be positive.");
         }
         if(!rmJoin.containsKey(xid)){
             throw new InvalidTransactionException(xid,"An unexpected transaction "+xid+" tried to commit");
@@ -158,7 +158,7 @@ public class TransactionManagerImpl
     @Override
     public boolean abort(int xid) throws RemoteException,InvalidTransactionException, TransactionAbortedException{
         if(xid < 0){
-            throw new InvalidTransactionException(xid, "Negative xid found");
+            throw new InvalidTransactionException(xid, "Xid must be positive.");
         }
         if(!rmJoin.containsKey(xid)){
             throw new InvalidTransactionException(xid,"An unexpected transaction "+xid+" tried to abort");
