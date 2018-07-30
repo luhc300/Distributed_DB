@@ -171,6 +171,7 @@ public class ResourceManagerImpl extends java.rmi.server.UnicastRemoteObject imp
             System.out.println(myRMIName + " bound to TM");
         } catch (Exception e) {
             System.err.println(myRMIName + " enlist error:" + e);
+            e.printStackTrace();
             return false;
         }
 

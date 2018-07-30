@@ -290,7 +290,7 @@ public class WorkflowControllerImpl
                             new String[]{location, ri.getIndex("price").toString(),
                                     Integer.toString((Integer.parseInt(ri.getIndex("roomNum").toString()) - numRooms)),
                                     Integer.toString((Integer.parseInt(ri.getIndex("availNum").toString()) - numRooms))});
-                    if (!rmRooms.update(xid, WorkflowController.RoomsTableName, location, newR)) {
+                    if (!rmRooms.update(xid, WorkflowController.RoomsTableName, ri.getKey(), newR)) {
                         return false;
                     }
                 }

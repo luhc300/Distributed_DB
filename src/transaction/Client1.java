@@ -29,7 +29,7 @@ public class Client1 {
 
         WorkflowController wc = null;
         try {
-            wc = (WorkflowController) Naming.lookup("//localhost/" + WorkflowController.RMIName);
+            wc = (WorkflowController) Naming.lookup(rmiPort + WorkflowController.RMIName);
             System.out.println("Bound to WC");
         } catch (Exception e) {
             System.err.println("Cannot bind to WC:" + e);
@@ -78,6 +78,7 @@ public class Client1 {
             System.err.println("Transaction Exception!");
     }catch(Exception e){
         System.err.println("Exception Info: "+e);
+        e.printStackTrace();
     }
     //Test query
     try{
@@ -102,6 +103,7 @@ public class Client1 {
         System.out.println(carLocation+" has "+carNum+" available cars, price is "+carPrice+"!");
     }catch(Exception e){
         System.err.println("Exception info: "+e);
+        e.printStackTrace();
     }
     //Test delete operations
     try{
@@ -120,6 +122,7 @@ public class Client1 {
             System.err.println("Transaction "+xid+" Commit failed!");
     }catch(Exception e){
         System.err.println("Exception info: "+e);
+        e.printStackTrace();
     }
 }
 }

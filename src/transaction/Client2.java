@@ -30,7 +30,7 @@ public class Client2 {
 
         WorkflowController wc = null;
         try {
-            wc = (WorkflowController) Naming.lookup("//localhost/" + WorkflowController.RMIName);
+            wc = (WorkflowController) Naming.lookup(rmiPort + WorkflowController.RMIName);
             System.out.println("Bound to WC");
         } catch (Exception e) {
             System.err.println("Cannot bind to WC:" + e);

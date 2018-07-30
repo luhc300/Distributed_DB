@@ -15,8 +15,8 @@ public class TransactionManagerImpl
         extends java.rmi.server.UnicastRemoteObject
         implements TransactionManager {
     protected int totalXid;
-    protected Hashtable<Integer, HashMap<String, ResourceManager>> rmJoin;
-    protected Hashtable<Integer, String> toDoList;
+    protected Hashtable<Integer, HashMap<String, ResourceManager>> rmJoin = new Hashtable<Integer, HashMap<String, ResourceManager>>();
+    protected Hashtable<Integer, String> toDoList = new Hashtable<Integer, String>();
     protected String dieTime = "NoDie";
     public static void main(String args[]) {
         System.setSecurityManager(new RMISecurityManager());
