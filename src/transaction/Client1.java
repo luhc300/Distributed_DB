@@ -97,7 +97,7 @@ public class Client1 {
         System.out.println(flightName+" has "+flightSeatNum+" available seats, price is "+flightPrice+"!");
         roomNum=wc.queryRooms(xid,hotelLocation);
         roomPrice=wc.queryRoomsPrice(xid,hotelLocation);
-        System.out.println(hotelLocation+" has "+roomNum+" available rooms, price is "+hotelLocation+"!");
+        System.out.println(hotelLocation+" has "+roomNum+" available rooms, price is "+roomPrice+"!");
         carNum=wc.queryCars(xid,carLocation);
         carPrice=wc.queryCarsPrice(xid,carLocation);
         System.out.println(carLocation+" has "+carNum+" available cars, price is "+carPrice+"!");
@@ -112,10 +112,7 @@ public class Client1 {
             System.out.println("Transaction "+xid+" Delete hotel location at "+"ZhangJiang!");
         else
             System.err.println("Transaction "+xid+" Delete hotel location at "+"ZhangJiang"+"failed!");
-        if(wc.deleteCars(xid,"ZhangJiang",20))
-            System.out.println("Transaction "+xid+" Delete car location at "+"ZhangJiang!");
-        else
-            System.err.println("Transaction "+xid+" Delete car location at "+"ZhangJiang"+"failed!");
+
         if(wc.commit(xid)==1)
             System.out.println("Transaction "+xid+" Commited Succesfully!");
         else

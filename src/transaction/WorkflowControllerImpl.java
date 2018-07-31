@@ -320,18 +320,19 @@ public class WorkflowControllerImpl
             int newPrice=0;
             ResourceItem item = rmCars.query(xid, WorkflowController.CarsTableName, location);
             if(item != null){
-                try {
-                    newCarNum = Integer.parseInt(item.getIndex("carNum").toString()) + numCars;
-                    newAvailNum=Integer.parseInt(item.getIndex("availNum").toString()) + numCars;
-                    newPrice = price<0?Integer.parseInt(item.getIndex("price").toString()):price;
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                } catch (InvalidIndexException e) {
-                    e.printStackTrace();
-                }
+
+                newCarNum = Integer.parseInt(item.getIndex("carNum").toString()) + numCars;
+                newAvailNum=Integer.parseInt(item.getIndex("availNum").toString()) + numCars;
+                newPrice = price<0?Integer.parseInt(item.getIndex("price").toString()):price;
+
                 ResourceItem newItem = new Car(location,newPrice,newCarNum,newAvailNum);
-                rmCars.update(xid, WorkflowController.CarsTableName, item.getKey(), newItem);
+                if (!rmCars.update(xid, WorkflowController.CarsTableName, item.getKey(), newItem))
+                {
+                    System.out.println("Xid" + xid + " Updatation of Car : location:" + location + " failed!");
+                    return false;
+                }
             }
+
             else{
                 newPrice = price<0?0:price;
                 ResourceItem newItem = new Car(location,newPrice,numCars,numCars);
@@ -345,6 +346,12 @@ public class WorkflowControllerImpl
         }catch (RemoteException e) {
             flag = false;
             tm.abort(xid);
+        }
+        catch (NumberFormatException e) {
+            e.printStackTrace();
+         }
+         catch (InvalidIndexException e) {
+            e.printStackTrace();
         }
         if (!flag) {
             System.out.println("Xid" + xid + " Addition of Cars location:" + location + " failed");
@@ -365,8 +372,13 @@ public class WorkflowControllerImpl
                 curCarNum=Integer.parseInt(carItem.getIndex("carNum").toString());
                 curAvailNum= Integer.parseInt(carItem.getIndex("availNum").toString());
                 price = Integer.parseInt(carItem.getIndex("price").toString());
-                if (curAvailNum >= numCars) {
-                    ResourceItem newItem  = new Car(location,price,curCarNum-numCars,curAvailNum-numCars);
+                if (numCars>0 && curAvailNum >= numCars) {
+//                    ResourceItem newItem  = new Car(location,price,curCarNum-numCars,curAvailNum-numCars);
+                    ResourceItem newItem = new ResourceItemImpl(ResourceItem.RICars, location,
+                            new String[]{"location", "price", "carNum", "availNum"},
+                            new String[]{location, carItem.getIndex("price").toString(),
+                                    Integer.toString((Integer.parseInt(carItem.getIndex("carNum").toString()) - numCars)),
+                                    Integer.toString((Integer.parseInt(carItem.getIndex("availNum").toString()) - numCars))});
                     rmCars.update(xid, WorkflowController.CarsTableName, carItem.getKey(), newItem);
                     return true;
                 }
@@ -643,7 +655,10 @@ public class WorkflowControllerImpl
                     if (availNum > 0) {
                         ResourceItem newReserveItem = new Reservation(custName, carType, location);
                         ResourceItem newCarItem = new Car(location, Integer.parseInt(carItem.getIndex("price").toString()), carNum, availNum - 1);
-                        if (rmReservations.insert(xid, WorkflowController.ReservationTableName, newReserveItem) && rmCars.update(xid, WorkflowController.CarsTableName, location, newCarItem)) {
+                        if(!rmCars.update(xid, WorkflowController.CarsTableName, carItem.getKey(), newCarItem)) {
+                            return false;
+                        }
+                        if (rmReservations.insert(xid, WorkflowController.ReservationTableName, newReserveItem)) {
                             System.out.println("Xid" + xid + " custName:" + custName + " reservation success!");
                             return true;
                         }

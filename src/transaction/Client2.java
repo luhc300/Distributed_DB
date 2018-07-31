@@ -39,7 +39,7 @@ public class Client2 {
     
 
     //Exception TransactionManager Die After Commit
-    try{
+    /*try{
             System.out.println("TransactionManager Die After Commit");
         int xid=wc.start();
         wc.dieTMAfterCommit();
@@ -80,9 +80,9 @@ public class Client2 {
         }
     }catch(Exception e){
         e.printStackTrace();
-    }
+    }*/
     //Exception ResourceManager Die Before Commit
-    try{
+    /*try{
         System.out.println(" ResourceManager Die Before Commit");
         int xid=wc.start();
         wc.dieRM(ResourceManager.RMINameFlights,"BeforeCommit");
@@ -122,9 +122,9 @@ public class Client2 {
         }
     }catch(Exception e){
         e.printStackTrace();
-    }
+    }*/
     //Exception ResourceManager Die Before Abort
-    try{
+   try{
         System.out.println(" ResourceManager Die Before Abort");
         int xid=wc.start();
         wc.dieRM(ResourceManager.RMINameFlights,"BeforeAbort");
@@ -148,13 +148,13 @@ public class Client2 {
 
         try{
             int res=0;
-            res=wc.commit(xid);
+            res=wc.abort(xid);
             if(res==1)
-                System.out.println(xid+" Commit succeeded!");
+                System.out.println(xid+" Abort succeeded!");
             else if(res==0)
-                System.out.println("Transaction " +xid+"falied to commit!");
+                System.out.println("Transaction " +xid+"falied to abort!");
             else
-                System.out.println(xid+" Commit Exception!");
+                System.out.println(xid+" Abort Exception!");
         }catch(RemoteException e){
             System.err.println("Remote Exception: "+e);
         }catch(TransactionAbortedException e){
@@ -167,7 +167,7 @@ public class Client2 {
     }
 
     //Exception ResourceManager Die After Enlist
-    try{
+    /*try{
         System.out.println(" ResourceManager Die After Enlist");
         int xid=wc.start();
         wc.dieRMAfterEnlist(ResourceManager.RMINameCars);
@@ -207,43 +207,10 @@ public class Client2 {
         }
     }catch(Exception e){
         e.printStackTrace();
-    }
-
-    try {
+    }*/
+    //Exception RM die Before Prepare
+    /*try {
         System.out.println(" ResourceManager Die Before Prepare");
-        int xid = wc.start();
-        wc.dieRM(ResourceManager.RMINameFlights, "AfterPrepare");
-        try{
-            if(wc.addCars(xid,"HanDan",200,100))
-                System.out.println(xid+" Adding car location at "+"HanDan");
-            else
-                System.err.println(xid+" Adding car location at "+"HanDan "+"failed!");
-        }catch(RemoteException e){
-            System.err.println("Remote Exception:"+e);
-        }
-
-        try{
-            if(wc.addFlight(xid,"LianHangG7652",200,1500))
-                System.out.println(xid+" Adding flight "+"LianHangG7652"+"!");
-            else
-                System.out.println(xid+" Adding flight "+"LianHangG7652"+" failed!");
-        }catch(RemoteException e){
-            System.err.println("Remote Exception:"+e);
-        }
-
-        try {
-            wc.commit(xid);
-        } catch (TransactionAbortedException e) {
-            System.err.println("TransactionAbortedException" + e);
-        } catch (RemoteException e) {
-            System.err.println("RemoteException" + e);
-        }
-    } catch (Exception e) {
-        System.err.println(e);
-    }
-
-    try {
-        System.out.println(" ResourceManager Die After Prepare");
         int xid = wc.start();
         wc.dieRM(ResourceManager.RMINameFlights, "BeforePrepare");
         try{
@@ -273,6 +240,39 @@ public class Client2 {
         }
     } catch (Exception e) {
         System.err.println(e);
-    }
+    }*/
+    //Exception RM die after prepare
+    /*try {
+        System.out.println(" ResourceManager Die After Prepare");
+        int xid = wc.start();
+        wc.dieRM(ResourceManager.RMINameFlights, "AfterPrepare");
+        try{
+            if(wc.addCars(xid,"HanDan",200,100))
+                System.out.println(xid+" Adding car location at "+"HanDan");
+            else
+                System.err.println(xid+" Adding car location at "+"HanDan "+"failed!");
+        }catch(RemoteException e){
+            System.err.println("Remote Exception:"+e);
+        }
+
+        try{
+            if(wc.addFlight(xid,"LianHangG7652",200,1500))
+                System.out.println(xid+" Adding flight "+"LianHangG7652"+"!");
+            else
+                System.out.println(xid+" Adding flight "+"LianHangG7652"+" failed!");
+        }catch(RemoteException e){
+            System.err.println("Remote Exception:"+e);
+        }
+
+        try {
+            wc.commit(xid);
+        } catch (TransactionAbortedException e) {
+            System.err.println("TransactionAbortedException" + e);
+        } catch (RemoteException e) {
+            System.err.println("RemoteException" + e);
+        }
+    } catch (Exception e) {
+        System.err.println(e);
+    }*/
 	}
 }
